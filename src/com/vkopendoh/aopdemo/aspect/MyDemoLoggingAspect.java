@@ -3,6 +3,7 @@ package com.vkopendoh.aopdemo.aspect;
 import java.util.List;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
@@ -70,9 +71,17 @@ public class MyDemoLoggingAspect {
 			throwing = "exception"
 			)
 	public void afterThrowingFindAccountsAdvice(JoinPoint joinPoint, Throwable exception) {
-		System.out.println("\n===>Method we are advising: " + joinPoint.getSignature().toShortString());
+		System.out.println("\n===> @AfterThrowing on method we are advising: " + joinPoint.getSignature().toShortString());
 		
 		System.out.println("===>Send SMS to DevOps - here is exception happens: " + exception);
+		
+	}
+	
+	@After("execution(* com.vkopendoh.aopdemo.dao.AccountDAO.findAccounts(..))")
+	public void afterFinallyFindAccountsAdvice(JoinPoint joinPoint) {
+		
+		System.out.println("\n===> @After (finally) on method we are advising: " + joinPoint.getSignature().toShortString());
+		
 		
 	}
 
