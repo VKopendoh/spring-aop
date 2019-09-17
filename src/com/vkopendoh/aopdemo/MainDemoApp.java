@@ -24,7 +24,7 @@ public class MainDemoApp {
 		// do it again
 		membershipDAO.addSillyMethod();
 		
-		
+		theAccountDAO.doWork();
 		//close context
 		context.close();
 
