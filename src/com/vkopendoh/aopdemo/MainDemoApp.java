@@ -24,6 +24,10 @@ public class MainDemoApp {
 		// do it again
 		membershipDAO.addSillyMethod();
 		
+		theAccountDAO.getTheName();
+		
+		theAccountDAO.setCheck(true);
+		
 		theAccountDAO.doWork();
 		//close context
 		context.close();
