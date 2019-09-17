@@ -1,6 +1,7 @@
 package com.vkopendoh.aopdemo.aspect;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -16,22 +17,24 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.vkopendoh.aopdemo.Account;
+import com.vkopendoh.aopdemo.AroundWithLoggerDemoApp;
 
 @Aspect
 @Component
 @Order(-23)
 public class MyDemoLoggingAspect {
+	private Logger myLogger = Logger.getLogger(AroundWithLoggerDemoApp.class.getName());
 	//this is where we add all of our advices for logging
 	
 	//start with @Before advice
 	@Before("com.vkopendoh.aopdemo.aspect.LuvAopExp.forDaoPackage()")
 	public void beforeAddAccountAdvice(JoinPoint joinPoint) {
-		System.out.println("\n====>>> Executing @Before MyDemoLogging order -23 advice on com.vkopendoh.aopdemo.dao package...");
+		myLogger.info("\n====>>> Executing @Before MyDemoLogging order -23 advice on com.vkopendoh.aopdemo.dao package...");
 		
 		//display method signature
 		MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
 		
-		System.out.println("====>Method: "+ methodSignature);
+		myLogger.info("====>Method: "+ methodSignature);
 		
 		//display method args
 		Object[] args = joinPoint.getArgs();
@@ -39,9 +42,9 @@ public class MyDemoLoggingAspect {
 		for(Object argument:args) {
 			if(argument instanceof Account) {
 				Account account = (Account) argument;
-				System.out.println("====>Account name: " + account.getName() + " Level: " + account.getLevel());
+				myLogger.info("====>Account name: " + account.getName() + " Level: " + account.getLevel());
 			} else {
-				System.out.println("====>Argument: " + argument);
+				myLogger.info("====>Argument: " + argument);
 			}
 			
 		}
@@ -57,15 +60,15 @@ public class MyDemoLoggingAspect {
 			List<Account> result ) {
 		String method = joinPoint.getSignature().toShortString();
 		
-		System.out.println("\n====> Exec @AfterReturning on method: " + method);		
+		myLogger.info("\n====> Exec @AfterReturning on method: " + method);		
 		
-		System.out.println("====>Result: " + result);
+		myLogger.info("====>Result: " + result);
 		
 		//modify returning data
 		
 		convertNameToUpperCase(result);
 		
-		System.out.println("====>NEW result: " + result);
+		myLogger.info("====>NEW result: " + result);
 	}
 	
 	@AfterThrowing(
@@ -73,16 +76,16 @@ public class MyDemoLoggingAspect {
 			throwing = "exception"
 			)
 	public void afterThrowingFindAccountsAdvice(JoinPoint joinPoint, Throwable exception) {
-		System.out.println("\n===> @AfterThrowing on method we are advising: " + joinPoint.getSignature().toShortString());
+		myLogger.info("\n===> @AfterThrowing on method we are advising: " + joinPoint.getSignature().toShortString());
 		
-		System.out.println("===>Send SMS to DevOps - here is exception happens: " + exception);
+		myLogger.info("===>Send SMS to DevOps - here is exception happens: " + exception);
 		
 	}
 	
 	@After("execution(* com.vkopendoh.aopdemo.dao.AccountDAO.findAccounts(..))")
 	public void afterFinallyFindAccountsAdvice(JoinPoint joinPoint) {
 		
-		System.out.println("\n===> @After (finally) on method we are advising: " + joinPoint.getSignature().toShortString());
+		myLogger.info("\n===> @After (finally) on method we are advising: " + joinPoint.getSignature().toShortString());
 		
 		
 	}
@@ -90,20 +93,31 @@ public class MyDemoLoggingAspect {
 	@Around("execution(* com.vkopendoh.aopdemo.service.*.getFortune(..))")
 	public Object aroundGetFortuneAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
 		
-		System.out.println("\n===> @Around on method we are advising: " + proceedingJoinPoint.getSignature().toShortString());
+		myLogger.info("\n===> @Around on method we are advising: " + proceedingJoinPoint.getSignature().toShortString());
 		
 		//get begin timestamp
 		long begin = System.currentTimeMillis();
 		
 		//exec method
-		Object result = proceedingJoinPoint.proceed();
+		Object result = null;
+		
+		try {
+			result =  proceedingJoinPoint.proceed();
+		}catch(Exception e) {
+			//log the exception
+			myLogger.warning(e.getMessage());
+			
+			//give user custom message
+			result = "Bad accident, but don't worry help on the way!";
+		}
+		
 		
 		//get end timestamp
 		long end = System.currentTimeMillis();
 		
 		//duration
 		long duration = end - begin;
-		System.out.println("\n====> Duration: " + duration/1000.0 + " seconds");		
+		myLogger.info("\n====> Duration: " + duration/1000.0 + " seconds");		
 		
 		return result;
 	}

@@ -16,4 +16,11 @@ public class TrafficFortuneService {
 		
 		return "Here havy traffic!!";
 	}
+
+	public String getFortune(boolean tripWire) {
+		if(tripWire) {
+			throw new RuntimeException("Accident happens!!");
+		}
+		return getFortune();
+	}
 }
