@@ -1,6 +1,9 @@
 package com.vkopendoh.aopdemo.aspect;
 
+import java.util.List;
+
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -24,7 +27,7 @@ public class MyDemoLoggingAspect {
 		//display method signature
 		MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
 		
-		System.out.println("Method: "+ methodSignature);
+		System.out.println("====>Method: "+ methodSignature);
 		
 		//display method args
 		Object[] args = joinPoint.getArgs();
@@ -32,13 +35,26 @@ public class MyDemoLoggingAspect {
 		for(Object argument:args) {
 			if(argument instanceof Account) {
 				Account account = (Account) argument;
-				System.out.println("Account name: " + account.getName() + " Level: " + account.getLevel());
+				System.out.println("====>Account name: " + account.getName() + " Level: " + account.getLevel());
 			} else {
-				System.out.println("Argument: " + argument);
+				System.out.println("====>Argument: " + argument);
 			}
 			
 		}
 		
 	}
+	
+	@AfterReturning(
+			pointcut = "execution(* com.vkopendoh.aopdemo.dao.AccountDAO.findAccounts(..))", 
+			returning = "result"
+			)
+	public void afterRetFindAccountAdvise(
+			JoinPoint joinPoint,
+			List<Account> result ) {
+		String method = joinPoint.getSignature().toShortString();
 		
+		System.out.println("\n====> Exec @AfterReturning on method: " + method);
+		
+		System.out.println("====>Result: " + result);
+	}
 }
