@@ -7,15 +7,15 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Aspect
+@Order(2)
 @Component
-@Order(-23)
-public class MyDemoLoggingAspect {
-	//this is where we add all of our advices for logging
+public class MyApiAnalyticsAspect {
+
 	
 	//start with @Before advice
-	@Before("com.vkopendoh.aopdemo.aspect.LuvAopExp.forDaoPackage()")
+	@Before("com.vkopendoh.aopdemo.aspect.LuvAopExp.forDaoExceptGetAndSet()")
 	public void beforeAddAccountAdvice() {
-		System.out.println("\n====>>> Executing @Before MyDemoLogging order -23 advice on com.vkopendoh.aopdemo.dao package...");
+		System.out.println("\n====>>> Executing Analytics order 2 @Before advice on com.vkopendoh.aopdemo.dao package... DO NOT apply to getters and setters");
 	}
-		
+	
 }

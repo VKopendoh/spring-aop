@@ -7,15 +7,16 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Aspect
+@Order(1)
 @Component
-@Order(-23)
-public class MyDemoLoggingAspect {
+public class MyCloudLogAspect {	
 	//this is where we add all of our advices for logging
 	
 	//start with @Before advice
-	@Before("com.vkopendoh.aopdemo.aspect.LuvAopExp.forDaoPackage()")
-	public void beforeAddAccountAdvice() {
-		System.out.println("\n====>>> Executing @Before MyDemoLogging order -23 advice on com.vkopendoh.aopdemo.dao package...");
+	
+	@Before("com.vkopendoh.aopdemo.aspect.LuvAopExp.forDaoExceptGetAndSet()")
+	public void performCloudLog() {
+		System.out.println("\n====>>> Perfom Cloud logging Order 1...");
 	}
-		
+	
 }
