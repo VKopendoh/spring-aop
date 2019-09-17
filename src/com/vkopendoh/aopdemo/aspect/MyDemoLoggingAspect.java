@@ -3,9 +3,11 @@ package com.vkopendoh.aopdemo.aspect;
 import java.util.List;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -83,6 +85,27 @@ public class MyDemoLoggingAspect {
 		System.out.println("\n===> @After (finally) on method we are advising: " + joinPoint.getSignature().toShortString());
 		
 		
+	}
+	
+	@Around("execution(* com.vkopendoh.aopdemo.service.*.getFortune(..))")
+	public Object aroundGetFortuneAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+		
+		System.out.println("\n===> @Around on method we are advising: " + proceedingJoinPoint.getSignature().toShortString());
+		
+		//get begin timestamp
+		long begin = System.currentTimeMillis();
+		
+		//exec method
+		Object result = proceedingJoinPoint.proceed();
+		
+		//get end timestamp
+		long end = System.currentTimeMillis();
+		
+		//duration
+		long duration = end - begin;
+		System.out.println("\n====> Duration: " + duration/1000.0 + " seconds");		
+		
+		return result;
 	}
 
 	private void convertNameToUpperCase(List<Account> result) {
