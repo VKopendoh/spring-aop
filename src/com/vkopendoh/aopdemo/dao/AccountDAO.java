@@ -12,7 +12,7 @@ public class AccountDAO {
 	}
 	
 	public String doWork() {
-		System.out.println(getClass()+ ": Doing my db work: adding account");
+		System.out.println(getClass()+ ": Doing work!!: doWork()");
 		return "";
 	}
 }
