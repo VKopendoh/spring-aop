@@ -7,9 +7,9 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import com.vkopendoh.aopdemo.dao.AccountDAO;
 import com.vkopendoh.aopdemo.dao.MembershipDAO;
 
-public class AfterReturningDemoApp {
+public class AfterThrowingDemoApp {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		
 		// read spring config java class
 		AnnotationConfigApplicationContext context = 
@@ -18,11 +18,19 @@ public class AfterReturningDemoApp {
 		//get the bean from spring container
 		AccountDAO theAccountDAO = context.getBean("accountDAO", AccountDAO.class);
 		
-				
-		// call business method
-		List<Account> accounts =  theAccountDAO.findAccounts(false);		
+		List<Account> accounts = null;
 		
-		System.out.println("\n\n Main program AfterReturningDemoApp ");
+		try {
+			// call business method
+			//add flag to simulate exception
+			boolean triWire = true;
+			accounts =  theAccountDAO.findAccounts(triWire);		
+		}catch(Exception e) {
+			System.out.println("\n Main program caught exception: " + e);
+		}
+		
+		
+		System.out.println("\n\n Main program AfterThrowingDemoApp ");
 		System.out.println("Accounts: " + accounts);
 		
 		//close context

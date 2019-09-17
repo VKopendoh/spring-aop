@@ -17,7 +17,11 @@ public class AccountDAO {
 		System.out.println(getClass()+ ": Doing my db work: adding account");
 	}
 	
-	public List<Account> findAccounts(){
+	public List<Account> findAccounts(boolean triWire) throws Exception{
+		
+		if(triWire) {
+			throw new RuntimeException("THIS IS Terrible issue!!!(((");
+		}
 		
 		List<Account> accounts = new ArrayList<>();
 		
@@ -27,7 +31,7 @@ public class AccountDAO {
 		
 		accounts.add(acc1);
 		accounts.add(acc2);
-		accounts.add(acc3);
+		accounts.add(acc3);		
 		
 		return accounts;
 	}
